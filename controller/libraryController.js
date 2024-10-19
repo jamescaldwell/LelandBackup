@@ -2,6 +2,7 @@ const connection = require("../connection/connection");
 const { STATUS_CODES } = require('http');
 const STATUS_OK = 200;
 const STATUS_CREATED = 201;
+const BAD_REQUEST = 400;
 const STATUS_NOT_FOUND = 404;
 const STATUS_INTERNAL_SERVER_ERROR = 500;
 
@@ -9,9 +10,13 @@ const STATUS_INTERNAL_SERVER_ERROR = 500;
 exports.createAuthor = async (req, res) => {
     try {
         const { name, bio } = req.body;
-        const sql = "INSERT INTO author (name, bio) VALUES (?, ?)";
-        const results = connection.run(sql, [name, bio]);
-        res.status(STATUS_CREATED).json({ message: 'Author created successfully', "Record added": results.values });
+        if (name) {
+            const sql = "INSERT INTO author (name, bio) VALUES (?, ?)";
+            const results = connection.run(sql, [name, bio]);
+            res.status(STATUS_CREATED).json({ message: 'Author created successfully', "Record added": results.values });
+        } else {
+            res.status(BAD_REQUEST).json({ message: 'Author name required'});
+        }
     } catch (err) {
         console.error(err.message);
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({ message: STATUS_CODES[STATUS_INTERNAL_SERVER_ERROR] });
@@ -21,7 +26,19 @@ exports.createAuthor = async (req, res) => {
 // Get all the authors /GET
 exports.getAllAuthors = async (req, res) => {
     try {
-        const sql = "SELECT * FROM author";
+        var sortSql = "";
+        const { sort } = req.query.sort;
+        console.log("Sort:" + sort);
+        if (sort) {
+            let firstChar = sort.slice(0, 1);
+            sort = " ORDER BY name ";
+            if (firstChar == 'D') {
+                sort += "DESC";
+            } else {
+                sort += "ASC";
+            }
+        }
+        const sql = "SELECT * FROM author" + sortSql;
         connection.all(sql, (error, authors) => {
             res.status(STATUS_OK).json({ authors });
         });
@@ -108,9 +125,13 @@ exports.deleteAuthor = async (req, res) => {
 exports.createBook = async (req, res) => {
     try {
         const { title,description,author_id,pubdate } = req.body;
-        const sql = "INSERT INTO book (title,description,author_id,pubdate) VALUES (?, ?, ?, ?)";
-        const results = connection.run(sql, [title,description,author_id,pubdate]);
-        res.status(STATUS_CREATED).json({ message: 'Book created successfully', "Record inserted": results.values });
+        if (title && author_id && pubdate) {
+            const sql = "INSERT INTO book (title,description,author_id,pubdate) VALUES (?, ?, ?, ?)";
+            const results = connection.run(sql, [title,description,author_id,pubdate]);
+            res.status(STATUS_CREATED).json({ message: 'Book created successfully', "Record inserted": results.values });
+        } else {
+            res.status(BAD_REQUEST).json({ message: 'Title, author_id, and pubdate are required' });
+        }
     } catch (err) {
         console.error(err.message);
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({ message: STATUS_CODES[STATUS_INTERNAL_SERVER_ERROR] });
