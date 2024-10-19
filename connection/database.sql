@@ -14,7 +14,7 @@ CREATE TABLE book(
     title VARCHAR(255),
     description TEXT,
     author_id INT,
-    pubdate DATE,
+    pubdate DATE, 
     INDEX auth_id (author_id),
     FOREIGN KEY (author_id) REFERENCES author (author_id) ON DELETE CASCADE,
     INDEX title_index (title)
