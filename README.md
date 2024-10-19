@@ -5,8 +5,7 @@
 This REST api service is designed to handle CRUD calls using node.js, express, and sqlite.
 
 ## How to Run
-- Create database **library** and use the *connection/database.sql* script to add the tables
-- Launch a command line/terminal and type:
+Launch a command line/terminal and type:
 - npm install
 - node index.js
 
@@ -223,10 +222,10 @@ title,description,author_id,pubdate
 </details>
 
 ## Testing
-- Launch a command line/terminal and type:
+Launch a command line/terminal and type:
 - npm test
 
 ## Tools Used
 - Visual Studio Code
 - Node.js
-- MySql
+- Sqlite
