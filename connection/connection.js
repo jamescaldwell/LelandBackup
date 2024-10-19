@@ -8,6 +8,7 @@ const connection = mysql.createConnection({
     database: 'library'
 });
 
+// make connection to database and report status
 connection.connect((err) => {
     if (!err) {
         console.log ("Connection to database success");

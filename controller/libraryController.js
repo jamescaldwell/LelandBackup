@@ -1,6 +1,7 @@
 const connection = require("../connection/connection");
 const { STATUS_CODES } = require('http');
 const STATUS_OK = 200;
+const STATUS_CREATED = 201;
 const STATUS_NOT_FOUND = 404;
 const STATUS_INTERNAL_SERVER_ERROR = 500;
 
@@ -10,7 +11,7 @@ exports.createAuthor = async (req, res) => {
         const { name, bio } = req.body;
         const sql = "INSERT INTO author (name, bio) VALUES (?, ?)";
         const results = connection.query(sql, [name, bio]);
-        res.status(STATUS_OK).json({ message: 'Author created successfully', "Record added": results.values });
+        res.status(STATUS_CREATED).json({ message: 'Author created successfully', "Record added": results.values });
     } catch (err) {
         console.error(err.message);
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({ message: STATUS_CODES[STATUS_INTERNAL_SERVER_ERROR] });
@@ -110,7 +111,7 @@ exports.createBook = async (req, res) => {
         const { title,description,author_id,pubdate } = req.body;
         const sql = "INSERT INTO book (title,description,author_id,pubdate) VALUES (?, ?, ?, ?)";
         const results = connection.query(sql, [title,description,author_id,pubdate]);
-        res.status(STATUS_OK).json({ message: 'Book created successfully', "Record inserted": results.values });
+        res.status(STATUS_CREATED).json({ message: 'Book created successfully', "Record inserted": results.values });
     } catch (err) {
         console.error(err.message);
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({ message: STATUS_CODES[STATUS_INTERNAL_SERVER_ERROR] });
