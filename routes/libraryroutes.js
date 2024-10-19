@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { createAuthor, getAllAuthors, getAuthorById, updateAuthor, deleteAuthor, 
-  createBook,  getAllBooks, getBookById, updateBook, deleteBook} = require("../controller/libraryController")
+  createBook,  getAllBooks, getBookById, updateBook, deleteBook} = require("../controller/libraryController");
 
 
 router.post("/api/v1/author", createAuthor);
